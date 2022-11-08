@@ -1,0 +1,54 @@
+/* Create table with names, phone numbers and emails of members of a family */ 
+CREATE TABLE family (id INTEGER PRIMARY KEY AUTOINCREMENT,
+name TEXT,
+email TEXT,
+phone_number TEXT);
+
+INSERT INTO family (name, email, phone_number) VALUES
+("Jean", "jean@gmail.com", "743-222-2222");
+INSERT INTO family (name, email, phone_number)VALUES      ("Micheline", "micheline@hotmail.com", "723-994-7885");
+INSERT INTO family (name, email, phone_number) VALUES ("CLAUDE", "Claude@yahoo.com","431-583-0835"); 
+INSERT INTO family (name, email, phone_number) VALUES
+("Lori", "lori@gmail.com", "543-346-2852");
+INSERT INTO family (name, email, phone_number)VALUES      ("Francis", "francis@hotmail.com", "334-954-7654");
+INSERT INTO family (name, email, phone_number) VALUES ("Henriette", "henriette@gmail.com","351-234-6423"); 
+
+/* Create a table with the skills and reliability of each family member in case another family member needs help. */
+CREATE TABLE help (id INTEGER PRIMARY KEY AUTOINCREMENT, Family_id INTEGER,
+good_at TEXT,
+reliability INTEGER);
+
+INSERT INTO help ( Family_id, good_at, reliability) VALUES
+( 1,"Electricity", 10);
+INSERT INTO help ( Family_id, good_at, reliability)VALUES   (2,"cooking", 7);
+INSERT INTO help (Family_id, good_at, reliability) VALUES ( 3,"CONSTRUCTION",10); 
+INSERT INTO help ( Family_id, good_at, reliability) VALUES
+( 4,"Saving money", 10);
+INSERT INTO help ( Family_id, good_at, reliability)VALUES   (5,"pluming", 3);
+INSERT INTO help (Family_id, good_at, reliability) VALUES ( 6,"health",10); 
+
+
+/*there are already 2 members of the family that we know are doing a project and are assigned to the person that has the skill in that domain*/
+CREATE TABLE assign (id INTEGER PRIMARY KEY AUTOINCREMENT, person1_id INTEGER, person2_id INTEGER);
+INSERT INTO assign (person1_id, person2_id)
+    VALUES(1, 2);
+INSERT INTO assign (person1_id, person2_id)
+    VALUES(3, 4);
+
+
+/* We want to show the name of the person doing the project and the email of the person assigned to him/her. In this case we know that Jean is working on a new receipe and if he gets stuck he can email Micheline and Claude is trying to save money and if he needs help he can email Lori*/
+
+SELECT a.name, b.email AS Email_Skilled_person
+FROM assign
+JOIN family a
+ON assign.person1_id =a.id
+JOIN family b
+ON assign.person2_id = b.id;
+
+/* what if Lori is putting a new light and needs help because there are 3 wires to connect and she doesn't want to burn her house, she wants to know the name, email and phone number of the person to call and how reliable is that person. After all she has to protect her kids from a possible fire.*/
+
+SELECT family.name, family.email, family.phone_number, help.reliability
+FROM family
+JOIN help
+ON family.id = help.Family_id
+WHERE help.good_at = "Electricity";
