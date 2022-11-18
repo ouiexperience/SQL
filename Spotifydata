@@ -40,3 +40,15 @@ SELECT artist_name
 FROM BIT_DB.Spotifydata
 ORDER by popularity DESC
 LIMIT 10;
+
+/*#3 What is the average popularity for the artists in the Spotify data table? For every artist with an average popularity of 90 or above,
+show their name, their average popularity, and label them as a “Top Star”.*/
+WITH tempTable AS(
+SELECT avg(popularity) AS average_popularity, artist_name
+FROM Spotifydata
+GROUP BY artist_name
+)
+SELECT artist_name, average_popularity , 'TOP Star' AS Best_artists 
+FROM tempTable
+WHERE average_popularity >= 90 
+;
