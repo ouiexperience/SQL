@@ -52,3 +52,125 @@ SELECT artist_name, average_popularity , 'TOP Star' AS Best_artists
 FROM tempTable
 WHERE average_popularity >= 90 
 ;
+
+
+
+/* ALL THE COMMANDS THAT I KNOW IN SQL*/
+/*1 To see the names of the columns that are in a table without taking the whole table (and extra time)*/
+SELECT * FROM BIT_DB.Spotifydata
+LIMIT 5
+; 
+
+
+/*If I want to see the table in order of popularity (usually order is the last clause in a query) from least popular to most popular */
+SELECT * FROM  BIT_DB. Spotifydata
+ORDER by popularity; /*we can also add ASC ofter popularity but in this case it already gives it in ASC order*/
+
+/*If I want only the 5 most popular artists */
+SELECT artist_name, popularity
+FROM BIT_DB.Spotifydata
+ORDER BY popularity DESC
+LIMIT 5; /*limit is the last clause in this query */
+
+/* If I only want to see the track_name that have a key of 6 and up and their key*/
+SELECT track_name, key
+FROM BIT_DB.Spotifydata
+WHERE key >= 6;
+
+/* If I only want to see the track_name that have a key of 6 and up in order from higher key to lower key*/
+SELECT track_name
+FROM Spotifydata
+WHERE key>=6 /* returns only the rows meeting a specific condition (it applies to individual rows)*/
+ORDER BY key DESC;
+
+/*If I want the list of all the artist that start with an A*/
+SELECT artist_name
+FROM BIT_DB.Spotifydata
+WHERE artist_name LIKE ('a%') /* if we wanted a list of all artists that have an "a" in their names we would have LIKE (%'a'%)*/
+GROUP BY artist_name; /* this will give the artist name only once even if it appears more than once in the list (without this we might see the same artist name)*/
+
+/* if we want to know how many minutes do I need to listen to all of the spotify playlist once*/
+SELECT (sum(duration_ms)/1000 /60)+1/* The duration is in miliseconds so I divided by 1000 to get the amount of seconds then by 60 to have the amount of minutes.
+SQLlite SUM does not support decimal numbers, it will give me how many minutes my playlist is but the playlist is a couple of seconds longer than 
+the answer so to be able to give a time I would add +1 to add a minute to the playlist */
+/*The decimal_sum() SQL function is available (as an extension) in the prerelease snapshot. That function does unlimited-precision decimal arithmetic. It returns an exact answer.
+The decimal_sum() function uses more CPU cycles than sum(), obviously.
+The decimal_sum() function is built into the CLI in the prerelease snapshot But in order to use it in your applications, you will have to load it as an extension.*/
+FROM BIT_DB.Spotifydata;
+
+
+/* SUM gives 1 number; the sum of all the rows for the column that we select in a table
+what if we want the durations of all songs for every artists?*/
+SELECT artist_name, SUM(duration_ms)
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name; /*if we don't GROUP BY we will only get 1 answer we want the total milliseconds per artists*/
+
+/*  what is the average duration in seconds in the playlist?*/
+SELECT avg(duration_ms)/1000/60
+FROM  BIT_DB.Spotifydata;
+
+/* if we want the average duration for Ariana Grande songs*/
+SELECT avg(duration_ms)/1000/60
+FROM BIT_DB.Spotifydata
+WHERE artist_name = 'Ariana Grande';
+
+
+/*what are the top  5 most popular songs?*/
+SELECT track_name, popularity
+FROM spotifydata
+GROUP BY track_name
+ORDER BY popularity DESC 
+LIMIT 5;
+
+/*what are the top  5 least popular songs?*/
+SELECT track_name, popularity
+FROM spotifydata
+GROUP BY track_name
+ORDER BY popularity ASC 
+LIMIT 5;
+
+/* what music should I dance to (what track has the highest energy?)*/
+SELECT track_name, max(energy)
+From Spotifydata /*here I did not group by because I only want the highest energy song of all the playlist. If I wanted the highest energy song from every artist I would add a GROUP BY artist_name*/
+;
+
+/* How many songs are on my playlist?*/
+SELECT COUNT (*)
+FROM BIT_DB.Spotifydata;
+
+/*how many songs are there for each key*/
+SELECT key, COUNT (*) AS Number_of_songs /* AS changes the name in the output table to a name that is easier to understand*/
+FROM BIT_DB.Spotifydata
+GROUP BY key; /* if we do not add this it will give the total amount of songs (the key the song is on would not matter)*/
+/*when we use GROUP BY with COUNT (), it takes the name of 1 or more columns and treats all rows with the same value in that cloumn as a single group*/
+
+/*how many tracks are in Major (mode = 1)*/
+SELECT COUNT (mode)
+FROM BIT_DB.Spotifydata
+WHERE mode = 1;
+
+/*what songs are in Major and in C (key=0)*/
+SELECT mode,key,track_name
+FROM BIT_DB.Spotifydata
+WHERE mode = 1 AND key = 0
+GROUP BY track_name;
+
+/*how many tracks are in Major and in C?*/
+SELECT COUNT(mode), COUNT (key)
+FROM BIT_DB.Spotifydata
+WHERE mode = 1 AND key = 0;
+
+/*how many tracks are in key =11 and mode =0?*/
+SELECT COUNT (mode)/*here we can also write COUNT (key)*/
+FROM BIT_DB.Spotifydata
+WHERE key = 11 AND mode = 0;
+
+/*what songs are in key 11 and mode 0?*/
+SELECT track_name
+FROM BIT_DB.Spotifydata
+WHERE  key = 11 AND mode = 0;
+
+/*what songs are in mode 0 And in key 11 or 10*/
+SELECT track_name
+FROM BIT_DB.Spotifydata
+WHERE mode = 0 AND (key = 10 OR Key = 11); /* AND has precedence on OR if I do not put () here we will get all the songs with mode = 0 and Key =10  and we will habe all songs with key =11 regarless if mode is 0 or 1.*/
