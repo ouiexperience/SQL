@@ -174,3 +174,71 @@ WHERE  key = 11 AND mode = 0;
 SELECT track_name
 FROM BIT_DB.Spotifydata
 WHERE mode = 0 AND (key = 10 OR Key = 11); /* AND has precedence on OR if I do not put () here we will get all the songs with mode = 0 and Key =10  and we will habe all songs with key =11 regarless if mode is 0 or 1.*/
+
+
+/* IN is used to check if a particular value is in a list of values. It is a query nested inside a 1)select, 2)insert, 3) Udpade or 4) delete statement. 
+It will check if a particular value is in a list of values */
+SELECT * FROM BIT_DB.Spotifydata WHERE artist_name IN ( 'Ariana Grande' , 'Doja Cat', 'Bad Bunny');
+/*if we want to know what songs from these artists (Ariana Grandem, Doja Cat and Bad Bunny) we have*/ 
+SELECT track_name FROM BIT_DB.Spotifydata WHERE artist_name IN ( 'Ariana Grande' , 'Doja Cat', 'Bad Bunny');
+
+/*In is used also when we have 2 tables that have something that matches. We do not want to change our query every time one of the tables gets updated so we use In for the computor to do the work for us.
+(JOIN combines 2 or more tables based on a common field between the 2 tables.)
+we would use Select colm_name FROM Table1 WHERE colum_name IN (SELECT column_name FROM T2 WHERE ...);*/
+
+
+
+
+/*HAVING is similar to WHERE but it applies only to groups as a whole (to the rows in the result set representing groups)*/
+/*IF we want to know which artists has at least 1 song with popularity over 86*/
+SELECT artist_name
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name /* without GROUP By we will have the artist name out severla times if they have several songs that are more popular than 86. With Group by as long
+as the artist has 1 song that has a popularity over 86 it's name will appear once.
+GROUP BY must be before HAVING statement*/
+HAVING popularity >86;
+
+/* IF I want to know how many songs each artists that has at least 1 song with popularity  over 86:*/
+/* list of each artist that have at least 1 song with pop > 86 and the number of total song each artists has (even if pop is not>86)*/ 
+SELECT artist_name, count() 
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name
+HAVING popularity >86;
+
+/* IF I want to know how many songs each artists has with song popularity  over 86:*/
+SELECT artist_name, count() AS NUMBER_OF_SONGS_POPULAR
+FROM BIT_DB.Spotifydata
+WHERE popularity >86
+GROUP BY artist_name;
+
+
+
+
+
+/* how many songs have popularity over 86*/
+SELECT count()
+FROM Spotifydata
+WHERE popularity >86;
+
+
+/* how many total songs do all the artist that have at least 1 song with popularity > 86   demonstrating IN*/
+SELECT COUNT()  FROM Spotifydata WHERE artist_name  IN 
+(SELECT artist_name 
+FROM Spotifydata
+WHERE popularity >86
+GROUP BY artist_name 
+ );
+/*count all the songs of all the artists that has at least 1 song with popularity >86 . there are 20 artists that have at least 1 song with pop>86 and those 20 artists have a total of 34 songs*/
+/*or easier way*/
+SELECT sum(track_name)
+FROM Spotifydata
+Having popularity >86
+;
+
+/* how many artists have at least 1 song with popularity over 86*/
+SELECT COUNT()  FROM Spotifydata WHERE track_name  IN
+(SELECT track_name /* if I put artist name I get count = 0)*/
+FROM Spotifydata
+WHERE popularity >86
+GROUP BY artist_name 
+ );
