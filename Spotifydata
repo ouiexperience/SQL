@@ -278,3 +278,32 @@ JOIN Spotifydata b
 ON a.track_name = b.track_name
 ;
 
+
+WITH tempTable AS (
+SELECT a.artist_name, AVG(a.popularity) AS avg_pop /*if I don't give AVG (a.popularity) another name, in the second query it cannot find it we have to tell the second query what it is exactly it is looking for*/
+FROM Spotifydata a
+GROUP BY a.artist_name
+)
+SELECT artist_name, avg_pop, 'TOP STAR' AS tag  
+FROM tempTable
+WHERE avg_pop  >=  90;
+
+
+WITH tempTable AS (
+SELECT artist_name, AVG(popularity) AS avg_pop /*I can also use the difficult way and not name Spotifydata a */
+FROM Spotifydata
+GROUP BY artist_name
+)
+SELECT artist_name, avg_pop, 'TOP STAR' AS tag  
+FROM tempTable
+WHERE avg_pop  >=  90;
+
+
+WITH tempTABLE AS(
+SELECT artist_name, AVG(popularity) AS AVG_POP
+FROM Spotifydata
+GROUP by artist_name
+)
+SELECT artist_name, AVG_POP, 'TOP STAR' AS tag
+FROM tempTABLE
+WHERE AVG_POP >= 90; /*no space between the > and the = (>=) or else error 
