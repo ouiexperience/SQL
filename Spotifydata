@@ -90,9 +90,8 @@ WHERE artist_name LIKE ('a%') /* if we wanted a list of all artists that have an
 GROUP BY artist_name; /* this will give the artist name only once even if it appears more than once in the list (without this we might see the same artist name)*/
 
 /* if we want to know how many minutes do I need to listen to all of the spotify playlist once*/
-SELECT (sum(duration_ms)/1000 /60)+1/* The duration is in miliseconds so I divided by 1000 to get the amount of seconds then by 60 to have the amount of minutes.
-SQLlite SUM does not support decimal numbers, it will give me how many minutes my playlist is but the playlist is a couple of seconds longer than 
-the answer so to be able to give a time I would add +1 to add a minute to the playlist */
+SELECT (sum(duration_ms)/1000.0 /60)/* The duration is in miliseconds so I divided by 1000 to get the amount of seconds then by 60 to have the amount of minutes.
+if I do not add 1000.0 or 60.0 I will have a rounded number because sql is doing integer division. to do decimal integer put one of the numbers in que equation as an integer*/
 /*The decimal_sum() SQL function is available (as an extension) in the prerelease snapshot. That function does unlimited-precision decimal arithmetic. It returns an exact answer.
 The decimal_sum() function uses more CPU cycles than sum(), obviously.
 The decimal_sum() function is built into the CLI in the prerelease snapshot But in order to use it in your applications, you will have to load it as an extension.*/
@@ -106,11 +105,11 @@ FROM BIT_DB.Spotifydata
 GROUP BY artist_name; /*if we don't GROUP BY we will only get 1 answer we want the total milliseconds per artists*/
 
 /*  what is the average duration in seconds in the playlist?*/
-SELECT avg(duration_ms)/1000/60
+SELECT avg(duration_ms)/1000.0/60
 FROM  BIT_DB.Spotifydata;
 
 /* if we want the average duration for Ariana Grande songs*/
-SELECT avg(duration_ms)/1000/60
+SELECT avg(duration_ms)/1000.0/60
 FROM BIT_DB.Spotifydata
 WHERE artist_name = 'Ariana Grande';
 
