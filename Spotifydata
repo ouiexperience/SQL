@@ -242,3 +242,39 @@ FROM Spotifydata
 WHERE popularity >86
 GROUP BY artist_name 
  );
+ 
+ /*We want to show what keys are each songs in (c, C#/Db...)*/
+SELECT track_name,
+CASE
+WHEN key = 0 THEN 'C'
+WHEN Key = 1 THEN 'C#/Db'
+WHEN key = 2 THEN 'D'
+WHEN Key = 3 THEN 'D#Eb'
+WHEN key = 4 THEN 'E'
+WHEN Key = 5 THEN 'F'
+WHEN key = 5 THEN 'F#Gb'
+WHEN Key = 7 THEN 'G'
+WHEN key = 8 THEN 'G#Ab'
+WHEN Key = 9 THEN 'A'
+WHEN key = 10 THEN 'A#Bb'
+ELSE 'B'
+END AS 'song_in'
+FROM Spotifydata;
+
+
+/* we can ude distict to get the name of the artist once instead of 2 times (it is similar to GROUP BY)*/
+SELECT distinct artist_name /* without distinct we would have the same artist listed several times*/
+FROM Spotifydata
+WHERE popularity > 86; 
+
+/*if we do not want a decimal number*/
+SELECT ROUND(loudness)
+FROM Spotifydata;
+
+/* if I want to have 2 columns per row instead of 1*/
+SELECT  artist_name, a.track_name, b.track_name As ANOTHER_COLUMN_WITH_SAME_NAME_SONGS
+FROM Spotifydata a
+JOIN Spotifydata b
+ON a.track_name = b.track_name
+;
+
