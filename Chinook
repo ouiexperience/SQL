@@ -2,3 +2,8 @@
 SELECT FirstName, LastName, Customerid, Country
 FROM chinook.customers
 WHERE Country != 'USA';
+
+/*Show Customers (their full names, customer ID, and country) who are from Brazil. */
+SELECT FirstName, LastName, Customerid, Country
+FROM chinook.customers
+WHERE Country = 'Brazil';
