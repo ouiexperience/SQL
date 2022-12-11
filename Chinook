@@ -7,3 +7,10 @@ WHERE Country != 'USA';
 SELECT FirstName, LastName, Customerid, Country
 FROM chinook.customers
 WHERE Country = 'Brazil';
+
+/*Show Customers (their full names, Invoice ID, Date of the invoice, and billing country) who are from Brazil. */
+SELECT cust.FirstName, cust.LastName, inv.invoiceId, inv.InvoiceDate, inv.BillingCountry
+FROM chinook.customers cust
+left join chinook.invoices inv
+on cust.CustomerId= inv.invoiceId
+WHERE Cust.Country = 'Brazil';
