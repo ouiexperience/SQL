@@ -14,3 +14,73 @@ FROM chinook.customers cust
 left join chinook.invoices inv
 on cust.CustomerId= inv.invoiceId
 WHERE Cust.Country = 'Brazil';
+
+/*Show the Employees who are Sales Agents.*/
+SELECT FirstName, LastName
+from CHINOOK.EMPLOYEES
+WHERE Title LIKE 'Sales%Agent';
+
+/*Find a unique list of billing countries from the Invoice table.*/
+SELECT DISTINCT BIllingCountry
+FROM chinook.invoices;
+
+/*Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.*/
+SELECT emp.LastName, emp.FirstName, inv.InvoiceId AS invoice_number
+FROM chinook.invoices inv
+JOIN chinook.customers cust
+ON inv.Customerid = cust.CustomerId
+JOIN chinook.employees emp
+ON emp.EmployeeId = cust.SupportRepId
+where emp.Title LIKE 'Sales%Agent';
+
+/*
+Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.*/
+SELECT cust.LastName, cust.FirstName, inv.Total, inv.BillingCountry, emp.LastName As Sales_Rep_LastName, emp.FirstName AS Sales_Rep_First_Name
+FROM chinook.invoices inv
+JOIN chinook.customers cust
+ON inv.Customerid = cust.CustomerId
+JOIN chinook.employees emp
+ON emp.EmployeeId = cust.SupportRepId;
+
+/*show how much each customer spent and Customer name, Country, and Sales Agent name for all invoices and customers*/
+SELECT cust.LastName, cust.FirstName, sum(inv.Total), inv.BillingCountry, emp.LastName As Sales_Rep_LastName, emp.FirstName AS Sales_Rep_First_Name
+FROM chinook.invoices inv
+JOIN chinook.customers cust
+ON inv.Customerid = cust.CustomerId
+JOIN chinook.employees emp
+ON emp.EmployeeId = cust.SupportRepId
+GROUP By cust.LastName;
+
+/*
+How many Invoices were there in 2009?*/
+SELECT Count(invoiceId)
+FROM chinook.invoices
+WHERE invoicedate Like '2009%';
+
+/*What are the total sales for 2009?*/
+SELECT sum(Total) 
+FROM chinook.invoices
+WHERE invoicedate Like '2009%';
+
+
+/*
+Show the total sales made by each sales agent..*/
+SELECT emp.LastName As Sales_Rep_LastName, emp.FirstName AS Sales_Rep_First_Name, sum(inv.Total)
+FROM chinook.invoices inv
+JOIN chinook.customers cust
+ON inv.Customerid = cust.CustomerId
+JOIN chinook.employees emp
+ON emp.EmployeeId = cust.SupportRepId
+GROUP By Sales_Rep_LastName;
+
+
+/*Which sales agent made the most dollars in sales in 2009 and how much?*/
+SELECT emp.LastName As Sales_Rep_LastName, emp.FirstName AS Sales_Rep_First_Name, sum(inv.Total)
+FROM chinook.invoices inv
+JOIN chinook.customers cust
+ON inv.Customerid = cust.CustomerId
+JOIN chinook.employees emp
+ON emp.EmployeeId = cust.SupportRepId
+GROUP By Sales_Rep_LastName
+ORDER BY sum(inv.Total) DESC
+LIMIT 1;
