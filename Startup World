@@ -1,0 +1,77 @@
+/*Rising trends in the startup world.*/
+
+/* I want top know how many companies are in this table*/
+SELECT COUNT(*) AS Total_number_of_companies
+FROM startups;
+
+/*What is the total value of all companies in this table?*/
+SELECT SUM(valuation)
+FROM startups;
+
+/*what is the highers amount raised by a startup and what is the name of the company?*/
+SELECT MAX(raised), name
+FROM startups;
+
+/* What is the maximum amount of money raised, during ‘Seed’ stage*/
+
+SELECT MAX(raised)
+FROM startups
+GROUP BY stage
+HAVING stage = 'Seed';
+/*or*/
+SELECT MAX(raised)
+FROM startups
+Where stage = 'Seed';
+
+/*In what year was the oldest company on the list founded?*/
+SELECT MIN (founded)
+FROM startups;
+/*or*/
+SELECT founded
+FROM startups
+ORDER BY founded 
+LIMIT 1;
+
+/*What is the average valuation?*/
+SELECT AVG(valuation)
+FROM startups;
+
+/*What is the average valuation in each category rounded to 2 decimal places and ordered from highest averages to lowest?*/
+SELECT ROUND (AVG(valuation),2), category
+FROM startups
+GROUP BY category
+ORDER BY ROUND (AVG(valuation),2) DESC;
+
+/*or*/
+SELECT ROUND (AVG(valuation),2), category
+FROM startups
+GROUP BY 2
+ORDER BY 1 DESC;
+
+
+/* what are the most competitive markets?
+How many companies belong to each category?*/
+
+SELECT COUNT(*), category
+FROM startups
+GROUP BY category;
+
+/*SHow only the categories that have more than 3 companies in them in order of most companies to least companies*/
+SELECT COUNT(*), category
+FROM startups
+GROUP BY category
+HAVING count(*) > 3
+ORDER BY 1 DESC;
+
+/*Is there a difference in startups sizes depending on the location?*/
+SELECT AVG(employees),location
+FROM startups
+GROUP BY location
+ORDER BY 1 DESC;
+
+/*Which locations have an average size above 500*/
+SELECT AVG(employees),location
+FROM startups
+GROUP BY location
+HAVING AVG(employees) > 500
+ORDER BY 1 DESC;
