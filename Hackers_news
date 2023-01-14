@@ -1,0 +1,58 @@
+ /*what are the top 5 stories with highest scores in hacker_news table?*/
+ SELECT *
+ FROM hacker_news
+ ORDER BY score DESC
+ LIMIT 5;
+
+/* Does Hacker News follow the 1-9-90 rule (is a small percentage of Hacker News submitters taking a majority of the points)*/
+SELECT SUM (score)
+FROM hacker_news;
+
+SELECT user, SUM(score)
+FROM hacker_news
+Group by user
+HAVING sum(score) >200
+ORDER BY 2 DESC;
+
+SELECT (512 + 309 + 304 + 282 ) / 6366.0;
+/* we found out that there are 4 users that accumulated over 200 points each and these 4 users have a combined 22% of the total scores in the table*/
+
+
+SELECT COUNT(timestamp), user
+FROM hacker_news
+where url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+GROUP by user
+ORDER BY 1 DESC;
+
+/* Which sites feed hacker News?*/
+
+SELECT CASE
+WHEN url like '%github%' THEN 'Github'
+When url like '%medium.com%' THEN 'Medium'
+WHEN url like '%nytimes.com%' THEN 'New York Time'
+Else 'Other'
+End as 'Source',
+count(*)
+FROM hacker_news
+GROUP by 1;
+
+/*when is the best time to post a story?*/
+
+/*what is the timestamp format?*/
+SELECT timestamp
+FROM hacker_news
+LIMIT 10;
+/* what are the hours of the timestamp, the average score for each hour and the number of stories per hour*/
+SELECT strftime('%H', timestamp), avg(score),COUNT(*)
+FROM hacker_news    
+GROUP BY 1
+ORDER BY 1;
+
+/*let's round the average scores take our the NULL values in timestamp and make the result more understandable with nicer column names.*/
+
+SELECT strftime('%H', timestamp) AS Hours, ROUND (avg(score), 2) AS Average_Scores_Per_Hour ,COUNT(*) AS Number_Of_Sories_Per_hour
+FROM hacker_news   
+WHERE timestamp is NOT NULL 
+GROUP BY 1
+ORDER BY 1;
+
